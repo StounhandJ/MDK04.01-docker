@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  server:
+    restart: always
+    build:
+      context: api
+      dockerfile: dockerfile
+    ports:
+      - "5555:5000"
+    container_name: api
+  
+  frontend:
+    restart: always
+    build:
+      context: frontend
+      dockerfile: dockerfile
+    ports:
+      - "8080:3000"
+    container_name: frontend
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: time_db
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "9090:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  todo-mysql-data:
